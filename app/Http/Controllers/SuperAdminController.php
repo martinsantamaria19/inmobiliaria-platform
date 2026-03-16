@@ -75,7 +75,11 @@ class SuperAdminController extends Controller
             $query->where('nombre', 'like', '%' . $request->search . '%');
         }
         if ($request->filled('estado')) {
-            $query->where('is_approved', $request->estado === 'aprobada');
+            if ($request->estado === 'aprobada') {
+                $query->where('is_approved', true);
+            } elseif ($request->estado === 'pendiente') {
+                $query->where('is_approved', false);
+            }
         }
         
         $inmobiliarias = $query->latest()->paginate(15)->withQueryString();
